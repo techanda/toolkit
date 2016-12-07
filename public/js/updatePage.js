@@ -220,8 +220,14 @@ function toggleViewOnWindow(selector,breakPoint){
 
 		if (currentView !== window.cardView) {
 			$(selector).bootstrapTable("toggleView");
+		setTimeout(function (){
+		  addClassToRowByValue("table#previewTable","On Exception","True","highlight-row");
+		  if (Number($(".btn-toggle-highlight .highlight-off").length) < 1) {
+		  	$(".highlight-row").toggleClass("highlighted");
+		  }
+		}, 100)
 		}
-	
+
 
 	});
 }
@@ -232,25 +238,40 @@ function addClassToRowByValue(tableSelector,columnName,columnValue,className){
 	})
 	var tHeaders 	= $(tableSelector + " thead tr").find("th"),
 		tRows		= $(tableSelector + " tbody").find("tr");
+
 	for (var i = 0; i < tHeaders.length; i++){
 		if ($(tHeaders[i]).find("div.th-inner").text() === columnName){var columnIndex = i}
 	}
-	$(tRows).each(function(){
-		if ($($(this).find("td")[columnIndex]).text() === columnValue){
+	
+	console.log($(tableSelector + " .card-view").length)
+	if ($(tableSelector + " .card-view").length < 1) {
+		$(tRows).each(function(){
+			if ($($(this).find("td")[columnIndex]).text() === columnValue){
 			$(this).addClass(className);
-		}
-	});
+			}
+		});
+	} else {
+		$(tRows).each(function(){
+			if ($($($(this).find(".card-view"))[columnIndex]).find("span.value").text() === columnValue){
+			$(this).addClass(className);
+			}
+		});
+	}
 
-	$($($($(".fixed-table-toolbar").find(">div"))[1]).find(">div,>button")[0])
-	.append("<button title='Toggle Exception Highlighting Off' class='btn btn-toggle-highlight btn-primary' style='border-radius:0;'>\
-		<span class='glyphicon glyphicon glyphicon-pencil' aria-hidden='true'></span></button>");
-	$('.btn-toggle-highlight').on("click",function(){
-		$(".highlight-row").toggleClass("highlighted");
-		$(".btn-toggle-highlight").find(".glyphicon").toggleClass("highlight-off");
-		if ($(".btn-toggle-highlight").attr("title") === "Toggle Exception Highlighting Off") {
-			$(".btn-toggle-highlight").attr("title","Toggle Exception Highlighting On");
-		} else {
-			$(".btn-toggle-highlight").attr("title","Toggle Exception Highlighting Off");
-		}
-	})
+	
+	if ($(".btn-toggle-highlight").length < 1) {
+		$($($($(".fixed-table-toolbar").find(">div"))[1]).find(">div,>button")[0])
+		.append("<button title='Toggle Exception Highlighting Off' class='btn btn-toggle-highlight btn-primary' style='border-radius:0;'>\
+			<span class='glyphicon glyphicon glyphicon-pencil' aria-hidden='true'></span></button>");
+		$('.btn-toggle-highlight').on("click",function(){
+			$(".highlight-row").toggleClass("highlighted");
+			$(".btn-toggle-highlight").find(".glyphicon").toggleClass("highlight-off");
+			if ($(".btn-toggle-highlight").attr("title") === "Toggle Exception Highlighting Off") {
+				$(".btn-toggle-highlight").attr("title","Toggle Exception Highlighting On");
+			} else {
+				$(".btn-toggle-highlight").attr("title","Toggle Exception Highlighting Off");
+			}
+		})
+	}	
+
 }
