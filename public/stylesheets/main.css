@@ -1,0 +1,163 @@
+.checkbox+.checkbox, .checkbox{
+	margin-top:0;
+}
+.section-rule{
+	border-bottom: 2px solid rgb(66, 139, 202);
+	display:block;
+	margin:15px 0;
+}
+.form-section{
+	margin-bottom: 90px;
+}
+
+.section-rule label{
+	font-size: 2em;
+	font-weight: 300;
+	background: rgb(66, 139, 202);
+	margin:0;
+	padding: 5px 30px;
+}
+.btn-file{
+	margin:5px 0;
+	min-width: 230px;
+}
+
+#fileName {
+	padding-left: 15px;
+	font-weight: 300;
+}
+#resultsPreview{
+	display: block;
+	// background:white;
+	min-height: 100px;
+	// color:#111;
+	padding:5px;
+	// max-height: 200px;
+	overflow: scroll;
+	margin-bottom: 90px;
+}
+#previewTable td{
+	padding:2px;
+	font-size: 10px;
+}
+#mainForm,#mTeamDirectGroup,
+#fileSelect,#resultsPreviewGroup,
+#downloadGroup,#fileSelect2,
+#toolboxTiles{
+	display:none;
+}
+
+#mTeamDirect{
+	column-count:2;
+	column-gap:30px;
+}
+
+#previewTable{
+	background-color: white;
+	width:100%;
+	color:#222;
+}
+
+
+#previewTable thead{
+	font-weight: 700;
+	font-size: 8px;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd){
+	background-color: #f5f5f5;
+}
+.filterControl input,
+.filterControl select{
+	background:#d9e6f2;
+}
+.toolboxTile a {
+	text-decoration: none;
+}
+.toolboxTile a .thumbnail,
+.toolboxTile a .thumbnail p{
+	background:white;
+	color: #555555;
+}
+.vertical-spacer{
+	width:100%;
+	display: block;
+	height: 60px;
+}
+.toolboxTile a .thumbnail h3{
+	color:rgb(92, 184, 92);
+}
+
+/* Underline From Center */
+.hvr-underline-from-center {
+  // display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px transparent;
+  position: relative;
+  overflow: hidden;
+}
+.hvr-underline-from-center:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  right: 50%;
+  bottom: 0;
+  background: rgb(217, 83, 79);
+  height: 10px;
+  -webkit-transition-property: left, right;
+  transition-property: left, right;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
+}
+.hvr-underline-from-center:hover:before, .hvr-underline-from-center:focus:before, .hvr-underline-from-center:active:before {
+  left: 0;
+  right: 0;
+}
+
+table > tbody > tr:nth-of-type(odd).highlighted{
+	background:#ff9999;
+}
+table > tbody > tr:nth-of-type(even).highlighted{
+	background:#ffcccc;
+}
+
+
+.footer{
+	text-align: center;
+	background:rgba(0,0,0,.1);
+}
+.navbar-brand{
+	font-weight: 700;
+}
+.highlight-off{
+	opacity: .4;
+}
+
+
+/* Extra small devices (phones, less than 767px) */
+/* No media query since this is the default in Bootstrap */
+
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+	.toolboxTile .thumbnail{
+		height: 360px;
+		overflow: hidden;
+	}
+}
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px)  {
+
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+
+}
+
+
