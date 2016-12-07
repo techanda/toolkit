@@ -21,11 +21,10 @@ $("select[name=mTeamMember]").on("change",function(event){
 		$("#mTeamDirectGroup").fadeIn();
 		location.href = "#mTeamDirectGroup";
 		$("#mTeamDirectGroup .checkbox input[type=checkbox]").change(function(){
-		updatePreview();
-		setTimeout(function (){
-		  addClassToRowByValue("table#previewTable","On Exception","True","highlight-row");
-		  $(".highlight-row").toggleClass("highlighted");
-		}, 100)
+			$.when(updatePreview()).then(function(){
+				addClassToRowByValue("table#previewTable","On Exception","True","highlight-row");
+			  	$(".highlight-row").toggleClass("highlighted");
+			})
 		});
 })
 
@@ -130,6 +129,16 @@ function updatePreview(){
 	    $.fn.tableExportSettings.fileName = fileName;
 	    $(".filter-show-clear").removeClass("btn-default");
 	    $(".filter-show-clear").addClass("btn-primary");
+	  //   $(".filter-show-clear").on("click",function(){
+	  //   	$.when(updatePreview()).then(function(){
+			// 	addClassToRowByValue("table#previewTable","On Exception","True","highlight-row");
+			// 	if ($(".btn-toggle-highlight .glyphicon.highlight-off").length < 1){
+			// 		$(".highlight-row").toggleClass("highlighted");
+			// 	}
+			// })
+	  //   })
+
+
 	    toggleViewOnWindow("table#previewTable",768);
 
 
@@ -143,7 +152,6 @@ function updatePreview(){
             });
         });
     })
-
 }
 
 
@@ -219,15 +227,16 @@ function toggleViewOnWindow(selector,breakPoint){
 		}
 
 		if (currentView !== window.cardView) {
-			$(selector).bootstrapTable("toggleView");
-		setTimeout(function (){
-		  addClassToRowByValue("table#previewTable","On Exception","True","highlight-row");
-		  if (Number($(".btn-toggle-highlight .highlight-off").length) < 1) {
-		  	$(".highlight-row").toggleClass("highlighted");
-		  }
-		}, 100)
+			
+			$.when(toggleView(selector)).then(function(){
+				addClassToRowByValue("table#previewTable","On Exception","True","highlight-row");
+		        if ($(".btn-toggle-highlight .glyphicon.highlight-off").length < 1){
+		            $(".highlight-row").toggleClass("highlighted");
+		        }
+			})
 		}
 
+		function toggleView(selector) {$(selector).bootstrapTable("toggleView");}
 
 	});
 }
@@ -243,7 +252,6 @@ function addClassToRowByValue(tableSelector,columnName,columnValue,className){
 		if ($(tHeaders[i]).find("div.th-inner").text() === columnName){var columnIndex = i}
 	}
 	
-	console.log($(tableSelector + " .card-view").length)
 	if ($(tableSelector + " .card-view").length < 1) {
 		$(tRows).each(function(){
 			if ($($(this).find("td")[columnIndex]).text() === columnValue){

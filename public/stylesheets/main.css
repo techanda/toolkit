@@ -137,8 +137,12 @@ table > tbody > tr:nth-of-type(even).highlighted{
 .highlight-off{
 	opacity: .4;
 }
-
-
+#resultsPreview .fixed-table-container{
+	border-radius: 0;
+}
+#resultsPreview .btn-group button{
+	border-radius: 0;
+}
 /* Extra small devices (phones, less than 767px) */
 /* No media query since this is the default in Bootstrap */
 
