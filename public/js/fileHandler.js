@@ -2,28 +2,27 @@
   $(document).ready(function() {
     window.csvObj = {};
     window.csvObj.mTeamMembers = [];
+    fileValid = false;
     if(isAPIAvailable()) {
       var masterObject = {};
-      $('#fileMaster').bind('change', handleFileSelect);
-      $('#fileException').bind('change', handleFileSelect);
-
-      $("#fileMaster").bind("change",function(){
-        $("#fileSelect2").hide();
-        $("#mainForm").hide();
-        $("#mTeamDirectGroup").hide();
-        $("#resultsPreviewGroup").hide();
-        $("#downloadGroup").hide();
-        if (window.fileValid === true) {
+      $('#fileMaster').bind('change', function(evt){
+        if (handleFileSelect(evt,this)){
+          $("#fileSelect2").hide();
+          $("#mainForm").hide();
+          $("#mTeamDirectGroup").hide();
+          $("#resultsPreviewGroup").hide();
+          $("#downloadGroup").hide();
           $("#fileSelect2").fadeIn();
           location.href = "#fileSelect2";
-        }
-      })
+        } else {console.log("handleFileSelect: false");}
+      });
+      $('#fileException').bind('change', handleFileSelect);
       $("#fileException").bind("change",function(){
         $("#mainForm").hide();
         $("#mTeamDirectGroup").hide();
         $("#resultsPreviewGroup").hide();
         $("#downloadGroup").hide();
-        if (window.fileValid === true) {
+        if (fileValid === true) {
           $("#mainForm").fadeIn();
           location.href = "#mainForm";
         }
@@ -54,28 +53,29 @@
     }
   }
 
-  function handleFileSelect(evt) {
+  function handleFileSelect(evt,element) {
     var files = evt.target.files; // FileList object
     var file = files[0];
-    window.fileValid = false;
-    var variableName = "csvFileData_" + $(this).attr("id");
+    fileValid = false;
+    var fileSelectId = $(element).attr("id")
+    var variableName = "csvFileData_" + fileSelectId;
     if (file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
-      if ($(this).attr("data-heirarchy") === "true") {
-        window.fileValid = true;
-        handleXLSX(this,files,variableName,true);
+      if ($(element).attr("data-heirarchy") === "true") {
+        console.log(handleXLSX(element,files,variableName,true));
+        console.log(fileValid)
       } else {
-        window.fileValid = true;
-        handleXLSX(this,files,variableName,false);
+        console.log(handleXLSX(element,files,variableName,false));
+        console.log(fileValid)
       }
     } 
     else if ( file.type === "text/csv")
     {
-      if ($(this).attr("data-heirarchy") === "true") {
-        window.fileValid = true;
-        handleCSV(this,file,variableName,true);
+      if ($(element).attr("data-heirarchy") === "true") {
+        handleCSV(element,file,variableName,true);
+        console.log(fileValid)
       } else {
-        window.fileValid = true;
-        handleCSV(this,file,variableName);
+        handleCSV(element,file,variableName);
+        console.log(fileValid)
       }
     } else {
       alert("Please select a valid file type");
@@ -83,41 +83,64 @@
 
 
     function handleCSV(element,file,variableName,heirarchyData = false) {
+      var fileSelectId = $(element).attr('id')
       var reader = new FileReader();
       reader.readAsText(file);
       reader.onload = function(event){
         var csv = event.target.result;
         var data = $.csv.toObjects(csv);
+        var currentHeaders = [];
+        for (key in data[0]){ currentHeaders.push(key)}
         window[variableName]= data;
-        updatePage(element,data,heirarchyData);
+        if ( superbag(currentHeaders,fileStructureReq[fileSelectId].requiredHeaders)) {
+          updatePage(element,data,heirarchyData);
+          console.log(fileValid);
+          fileValid = true;
+          console.log(fileValid)
+        } else {
+          message = "Oops, this appears to be an incompatible file.  Make sure that you are loading the correct file and try again."
+          alert(message);
+          fileValid = false;
+        }
       };
 
       reader.onerror = function(){ alert('Unable to read ' + file.fileName); };
     }
 
     function handleXLSX(element,files,variableName,heirarchyData = false) {
-      var i,f;
-      for (i = 0, f = files[i]; i != files.length; ++i) {
-        var reader = new FileReader();
-        var name = f.name;
-        reader.onload = function(e) {
-          var dataXLSX = e.target.result;
-          var workbook = XLSX.read(dataXLSX, {type: 'binary'});
-          window.workbook = workbook
+      var fileSelectId = $(element).attr('id')
+        var name = files[0].name;
+        $.when(function(){
+            var reader = new FileReader();
+            reader.onload = function(e) {
+              var dataXLSX = e.target.result;
+              var workbook = XLSX.read(dataXLSX, {type: 'binary'});
+              window.workbook = workbook
 
-          var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[first(workbook.Sheets)]);
+              var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[first(workbook.Sheets)]);
 
-          var data = $.csv.toObjects(csv);
-          window[variableName]= data;
-          updatePage(element,data,heirarchyData);
+              var data = $.csv.toObjects(csv);
+              window[variableName]= data;
+              var currentHeaders = [];
+              for (key in data[0]){ currentHeaders.push(key)}
+              if ( superbag(currentHeaders,fileStructureReq[fileSelectId].requiredHeaders)) {
+                updatePage(element,data,heirarchyData);
+                window.fileValid = true;
+              } else {
+                message = "Oops, this appears to be an incompatible file.  Make sure that you are loading the correct file and try again."
+                alert(message);
+                window.fileValid = false;
+              }
+              console.log(fileValid)
 
-
-          function first(obj) {
-            for (var a in obj) return a;
-          }
-        };
-        reader.readAsBinaryString(f);
-      }
+              function first(obj) {
+                for (var a in obj) return a;
+              }
+            };
+            reader.readAsBinaryString(files[0]);
+        }).then(function(){
+          console.lof
+        })  
     }
 
     function updatePage(element,data,heirarchyData = false){
@@ -188,12 +211,13 @@
 
         var mTeamMembersHtml = "<option value='null'>- Please Select -</option>";
         $(csvObj.mTeamMembers).each(function(){
-          mTeamMembersHtml += "<option value='"+this.name +"'>"+this.name+"</option>";
+          mTeamMembersHtml += "<option value='"+element.name +"'>"+element.name+"</option>";
         })
 
         $("select[name=mTeamMember]").html(mTeamMembersHtml);
     }
-
+    console.log(fileValid)
+    return fileValid;
   }
 
   function downloadFile(tableSelector){
@@ -216,3 +240,41 @@
     $table.bootstrapTable('togglePagination');
 
 }
+
+function superbag(sup, sub) {
+    sup.sort();
+    sub.sort();
+    var i, j;
+    for (i=0,j=0; i<sup.length && j<sub.length;) {
+        if (sup[i] < sub[j]) {
+            ++i;
+        } else if (sup[i] == sub[j]) {
+            ++i; ++j;
+        } else {
+            // sub[j] not in sup, so sub not subbag
+            return false;
+        }
+    }
+    // make sure there are no elements left in sub
+    return j == sub.length;
+}
+
+function superbag(sup, sub) {
+    sup.sort();
+    sub.sort();
+    var i, j;
+    for (i=0,j=0; i<sup.length && j<sub.length;) {
+        if (sup[i] < sub[j]) {
+            ++i;
+        } else if (sup[i] == sub[j]) {
+            ++i; ++j;
+        } else {
+            // sub[j] not in sup, so sub not subbag
+            return false;
+        }
+    }
+    // make sure there are no elements left in sub
+    return j == sub.length;
+}
+
+
