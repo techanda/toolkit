@@ -1216,6 +1216,12 @@
         this.initSearch();
         this.updatePagination();
         this.trigger('search', text);
+
+        
+        addClassToRowByValue("table#previewTable","On Exception","True","highlight-row");
+        if ($(".btn-toggle-highlight .glyphicon.highlight-off").length < 1){
+            $(".highlight-row").toggleClass("highlighted");
+        }
     };
 
     BootstrapTable.prototype.initSearch = function () {
