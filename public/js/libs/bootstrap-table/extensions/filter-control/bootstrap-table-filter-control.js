@@ -618,7 +618,7 @@
 
         addClassToRowByValue("table#previewTable","On Exception","True","highlight-row");
         if ($(".btn-toggle-highlight .glyphicon.highlight-off").length < 1){
-            $(".highlight-row").toggleClass("highlighted");
+            $(".highlight-row").addClass("highlighted");
         }
     };
 
@@ -673,10 +673,10 @@
                 }
             }, that.options.searchTimeOut);
         }
-
+        console.log("clear Filter")
         addClassToRowByValue("table#previewTable","On Exception","True","highlight-row");
         if ($(".btn-toggle-highlight .glyphicon.highlight-off").length < 1){
-            $(".highlight-row").toggleClass("highlighted");
+            $(".highlight-row").addClass("highlighted");
         }
     };
 })(jQuery);

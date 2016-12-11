@@ -102,7 +102,6 @@ function handleFileSelect(evt) {
   }
 
   function handleXLSX(element,files,variableName,heirarchyData = false) {
-    console.log(element)
     var fileSelectId = $(element).attr('id')
       var name = files[0].name;
       var reader = new FileReader();
