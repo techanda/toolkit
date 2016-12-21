@@ -22,6 +22,13 @@
 	min-width: 230px;
 }
 
+#mainJumbotron {
+	background-image: url(../img/jumbotron.png);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
 #fileName {
 	padding-left: 15px;
 	font-weight: 300;
