@@ -53,7 +53,10 @@ function handleFileSelect(evt) {
       handleCSV(element,file,variableName);
     }
   } else {
-    alert("Please select a valid file type");
+    var message = "<strong>" + file.name + "</strong> is not a supported file type.  \
+                    Please use a valid spreadsheet document type.\
+                    Valid file types are file swith the extension CSV, XLS, or XLSX.";
+    errorMessage(message);
   }
 
   function handleCSV(element,file,variableName,heirarchyData = false) {
@@ -92,13 +95,14 @@ function handleFileSelect(evt) {
             location.href = "#mainForm";
           }
         } else {
-          message = "Oops, this appears to be an incompatible file.  Make sure that you are loading the correct file and try again."
-          alert(message);
+          message = "Oops, <strong>" + file.name + "</strong> appears to have the wrong information.  Make sure \
+                    that you are loading the correct file and try again."
+          errorMessage(message);
           
         }
     };
 
-    reader.onerror = function(){ alert('Unable to read ' + file.fileName); };
+    reader.onerror = function(){ errorMessage('Unable to read ' + file.fileName); };
   }
 
   function handleXLSX(element,files,variableName,heirarchyData = false) {
@@ -142,8 +146,9 @@ function handleFileSelect(evt) {
             location.href = "#mainForm";
           }
         } else {
-          message = "Oops, this appears to be an incompatible file.  Make sure that you are loading the correct file and try again."
-          alert(message);
+          message = "Oops, <strong>" + file.name + "</strong> appears to have the wrong information.  Make sure \
+                    that you are loading the correct file and try again."
+          errorMessage(message);
           
         }
 
@@ -266,6 +271,11 @@ function superbag(sup, sub) {
     }
     // make sure there are no elements left in sub
     return j == sub.length;
+}
+
+function errorMessage(messageHTML){
+    $("#errorModal p#errorMessage").html(messageHTML);
+    $("#errorModal").modal("show");
 }
 
 

@@ -175,12 +175,34 @@
 		<script src="public/js/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js" type="text/javascript"></script>
 		<script src="public/js/libs/bootstrap-table/extensions/export/bootstrap-table-export.min.js" type="text/javascript"></script>
 		<script src="public/js/libs/jquery/jquery.base64.js" type="text/javascript"></script>
-		<script src="public/js/libs/lodash/lodash.js" type="text/javascript"></script>
 		<script src="public/js/data/tile_list.js" type="text/javascript"></script>
 		<script src="public/js/buildTiles.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			$("#buildMenu").buildMenu(toolboxItems)
 		</script>
+
+		<!-- Modals -->
+		<div id="errorModal" class="modal fade" role="dialog">
+		  <div class="modal-dialog">
+
+		    <!-- Modal content-->
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		        <h4 class="modal-title">Oops, something went wrong</h4>
+		      </div>
+		      <div class="modal-body">
+		        <p id="errorMessage">Some text in the modal.</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+
+		  </div>
+		</div>
+
+
 	</body>
 	<footer>
 		<div class="container footer">Created by Tim Ramsier | <a href="mailto:timramsier@gmail.com">Tim.Ramsier@gmail.com</a> | 2016</div>
